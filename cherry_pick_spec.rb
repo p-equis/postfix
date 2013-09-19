@@ -10,19 +10,18 @@ describe "cherry-picking" do
 		@repository.destroy
 	end
 
-	xit "should append text to the original message" do
+	it "should perform a normal cherry-pick" do
 		@repository.create_commit "first on trunk"
 		@repository.create_branch "new_branch"
 		
 		@repository.create_commit "to cherry-pick"
 
-		@repository.cherry_pick ( :take=>'master', 
-			:to => 'new_branch', 
-			:merge_message => '[merged from trunk]' )
+		@repository.cherry_pick(:take=>'master', 
+								:to => 'new_branch')
 
 		@repository.checkout_branch "new_branch"
 		
-		@repository.top_commit_message.should == "to cherry-pick[merged from trunk]"
+		@repository.top_commit_message.should == "to cherry-pick"
 	end
 end
 
@@ -56,14 +55,19 @@ class GitRepository
 	end
 
 	def cherry_pick (options)
+		cherry = options[:take]
+		target_branch = options[:to]
+		merge_message = options[:merge_message]
 
+		checkout_branch target_branch
+		bash("git cherry-pick #{cherry}")
 	end
 
 	def top_commit_message 
-		`git log -1 --pretty=format:'%s'`
+		bash("git log -1 --pretty=format:'%s'")
 	end
 
 	def bash (command)
-		result = `(cd #{@workspace} && #{command})`
+		`(cd #{@workspace} && #{command})`
 	end
 end
