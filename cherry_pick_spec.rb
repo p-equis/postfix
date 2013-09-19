@@ -1,23 +1,30 @@
+require 'fileutils'
+
 describe "cherry-picking" do
-	
+
 	before :all do
-		set_up_git_repository
+		@repository = GitRepository.new
 	end
 
 	after :all do
-		delete_git_repository
+		@repository.destroy
 	end
 
 	it "should append text to the original message" do
 		
 	end
+end
 
-	def set_up_git_repository
-		@workspace = Dir::pwd + "/" + "workspace"
+class GitRepository
+	def initialize
+		@workspace = Dir::pwd + "/workspace"
+		destroy
 		Dir::mkdir @workspace
+		Dir::chdir @workspace
+		system("git init")
 	end
 
-	def delete_git_repository
-		Dir::rmdir @workspace
+	def destroy
+		FileUtils.rm_rf @workspace
 	end
 end
