@@ -40,13 +40,23 @@ describe "cherry-picking" do
 	end
 end
 
+class Subshell
+	def initialize(workspace)
+		@workspace = workspace
+	end
+
+	def run(command)
+		`(cd #{@workspace} && #{command})`
+	end
+end
+
 class GitRepository
 	def initialize
 		@workspace = Dir::pwd + "/workspace"
 		@file_id = 1
 		destroy
 		Dir::mkdir @workspace
-		bash("git init")
+		run_in_subshell("git init")
 	end
 
 	def destroy
@@ -56,17 +66,17 @@ class GitRepository
 	def create_commit (message)
 		file_name = "#{@file_id}.txt"
 		@file_id += 1
-		bash("touch #{file_name}")
-		bash("git add #{file_name}")
-		bash("git commit -m '#{message}'")
+		run_in_subshell("touch #{file_name}")
+		run_in_subshell("git add #{file_name}")
+		run_in_subshell("git commit -m '#{message}'")
 	end
 
 	def create_branch (name)
-		bash("git branch #{name}")
+		run_in_subshell("git branch #{name}")
 	end
 
 	def checkout_branch (name)
-		bash("git checkout #{name}")
+		run_in_subshell("git checkout #{name}")
 	end
 
 	def cherry_pick (options)
@@ -76,14 +86,15 @@ class GitRepository
 
 		checkout_branch target_branch
 		ENV["GIT_EDITOR"] = "sh #{Dir::pwd}/show.sh"
-		bash("git cherry-pick #{cherry} --edit")
+		run_in_subshell("git cherry-pick #{cherry} --edit")
 	end
 
 	def top_commit_message 
-		bash("git log -1 --pretty=format:'%s'")
+		run_in_subshell("git log -1 --pretty=format:'%s'")
 	end
 
-	def bash (command)
-		`(cd #{@workspace} && #{command})`
+	def run_in_subshell (command)
+		subshell = Subshell.new @workspace
+		subshell.run command
 	end
 end
