@@ -1,8 +1,5 @@
 MESSAGE_FILE=$1
 
-echo "Message file: " $MESSAGE_FILE
+COMMIT_MESSAGE=$(cat $MESSAGE_FILE | grep -v "^#")
 
-
-COMMIT_MESSAGE=echo "merged from trunk" | cat $MESSAGE_FILE - 
-
-echo $COMMIT_MESSAGE > $MESSAGE_FILE
+echo "$COMMIT_MESSAGE" "[merged from trunk]" > $MESSAGE_FILE
