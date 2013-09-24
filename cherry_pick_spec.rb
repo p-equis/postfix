@@ -10,20 +10,6 @@ describe "cherry-picking" do
 		@repository.destroy
 	end
 
-	xit "should perform a normal cherry-pick" do
-		@repository.create_commit "first on trunk"
-		@repository.create_branch "new_branch"
-		
-		@repository.create_commit "to cherry-pick"
-
-		@repository.cherry_pick(:take => 'master', 
-								:to => 'new_branch')
-
-		@repository.checkout_branch "new_branch"
-		
-		@repository.top_commit_message.should == "to cherry-pick"
-	end
-
 	it "should append a message to the cherry-pick" do
 		@repository.create_commit "first on trunk"
 		@repository.create_branch "new_branch"
