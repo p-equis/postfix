@@ -9,7 +9,7 @@ class CherryPicker
 		merge_message = options[:merge_message]
 
 		checkout_branch target_branch
-		ENV["GIT_EDITOR"] = "sh #{Dir::pwd}/show.sh"
+		ENV["GIT_EDITOR"] = "sh #{Dir::pwd}/show.sh '#{merge_message}'"
 		run_in_subshell("git cherry-pick #{cherry} --edit")
 	end
 
