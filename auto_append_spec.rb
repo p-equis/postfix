@@ -1,4 +1,5 @@
 require 'tempfile'
+require 'auto_append_to_commit_message'
 
 describe "automatically appending a message to the git commit message file" do
 
@@ -8,9 +9,7 @@ describe "automatically appending a message to the git commit message file" do
 		temp_file.write "Original commit message."
 		temp_file.flush
 
-		merge_message = "[merged]"
-
-		`sh #{Dir::pwd}/show.sh '#{merge_message}' #{temp_file.path}`
+		append_to_commit_message("[merged]", temp_file.path)
 
 		File.open(temp_file.path, 'r').first.strip.should == "Original commit message. [merged]"
 	end
