@@ -15,7 +15,7 @@ class CherryPicker
 
 	def script
 		directory_of_this_file = File.expand_path(File.dirname(__FILE__))
-		"sh #{directory_of_this_file}/show.sh "
+		"sh #{directory_of_this_file}/auto_append_to_commit_message.sh "
 	end
 
 	def checkout_branch (name)
