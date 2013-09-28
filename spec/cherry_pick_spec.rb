@@ -27,4 +27,17 @@ describe "cherry-picking" do
 		
 		@repository.top_commit_message.should == "to cherry-pick [merged from trunk]"
 	end
+
+	it "should append a message through the command line" do
+		@repository.create_commit "first on trunk"
+		@repository.create_branch "new_branch"
+		
+		@repository.create_commit "to cherry-pick"
+
+		@repository.run_in_subshell("ruby -I#{Dir.pwd}/lib/ #{Dir.pwd}/bin/chatty_pick.rb master new_branch")
+		
+		@repository.checkout_branch "new_branch"
+		
+		@repository.top_commit_message.should == "to cherry-pick [merged from trunk]"
+	end
 end

@@ -4,6 +4,12 @@ class Subshell
 	end
 
 	def run(command)
-		`(cd #{@workspace} && #{command})`
+		bash_command("cd #{@workspace} && #{command}")
 	end
+end
+
+def bash_command(command)
+	output = `#{command}`
+	raise "Bash command failed: #{command}" unless $?.success?
+	output
 end

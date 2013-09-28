@@ -1,12 +1,14 @@
+require 'subshell'
+
 class CherryPicker
 	def initialize(workspace)
 		@workspace = workspace
 	end
 
 	def cherry_pick (options)
-		cherry = options[:take]
-		target_branch = options[:to]
-		merge_message = options[:merge_message]
+		cherry = extract(options, :take)
+		target_branch = extract(options, :to)
+		merge_message = extract(options, :merge_message)
 
 		checkout_branch target_branch
 		ENV["GIT_EDITOR"] = "#{script} '#{merge_message}'"
@@ -25,5 +27,15 @@ class CherryPicker
 	def run_in_subshell (command)
 		subshell = Subshell.new @workspace
 		subshell.run command
+	end
+
+	def extract(options, symbol)
+		option = options[symbol]
+
+		if option.nil?
+			raise "Missing a required argument: '#{symbol}'"
+		end
+
+		option
 	end
 end
