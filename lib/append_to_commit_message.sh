@@ -1,6 +1,6 @@
 MERGE_MESSAGE=$1
 MESSAGE_FILE=$2
 
-COMMIT_MESSAGE=$(cat $MESSAGE_FILE | grep -v "^#")
+COMMIT_MESSAGE=$(cat $MESSAGE_FILE | grep -v "^#" | grep -v "^git-svn-id")
 
 echo "$COMMIT_MESSAGE" $MERGE_MESSAGE > $MESSAGE_FILE
