@@ -34,7 +34,7 @@ describe "cherry-picking" do
 		
 		@repository.create_commit "to cherry-pick"
 
-		@repository.run_in_subshell("ruby -I#{Dir.pwd}/lib/ #{Dir.pwd}/bin/chatty_pick.rb master new_branch")
+		@repository.run_in_subshell("ruby -I#{Dir.pwd}/lib/ #{Dir.pwd}/bin/chatty_pick master new_branch")
 		
 		@repository.checkout_branch "new_branch"
 		
