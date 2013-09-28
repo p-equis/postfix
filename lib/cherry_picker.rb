@@ -1,9 +1,10 @@
 require 'subshell'
 require 'append_to_commit_message'
+require 'git_repository'
 
 class CherryPicker
 	def initialize(workspace)
-		@workspace = workspace
+		@git = GitRepository.new workspace
 	end
 
 	def cherry_pick (options)
@@ -11,18 +12,13 @@ class CherryPicker
 		target_branch = extract(options, :to)
 		merge_message = extract(options, :merge_message)
 
-		checkout_branch target_branch
+		original_branch = @git.current_branch_name
+
+		@git.checkout_branch target_branch
 		ENV["GIT_EDITOR"] = AppendToCommitMessage.create_script_command(merge_message)
-		run_in_subshell("git cherry-pick #{cherry} --edit")
-	end
+		@git.run_in_subshell("git cherry-pick #{cherry} --edit")
 
-	def checkout_branch (name)
-		run_in_subshell("git checkout #{name}")
-	end
-
-	def run_in_subshell (command)
-		subshell = Subshell.new @workspace
-		subshell.run command
+		@git.checkout_branch original_branch
 	end
 
 	def extract(options, symbol)

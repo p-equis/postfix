@@ -1,4 +1,6 @@
-class GitRepository
+require 'git_repository'
+
+class TestingGitRepository < GitRepository
 	def initialize
 		@workspace = Dir::pwd + "/workspace"
 		@file_id = 1
@@ -23,21 +25,8 @@ class GitRepository
 		run_in_subshell("git branch #{name}")
 	end
 
-	def checkout_branch (name)
-		run_in_subshell("git checkout #{name}")
-	end
-
 	def cherry_pick (options)
 		cherry_picker = CherryPicker.new @workspace
 		cherry_picker.cherry_pick options
-	end
-
-	def top_commit_message 
-		run_in_subshell("git log -1 --pretty=format:'%s'")
-	end
-
-	def run_in_subshell (command)
-		subshell = Subshell.new @workspace
-		subshell.run command
 	end
 end
