@@ -6,3 +6,7 @@
 # Running arbitrary rake tasks
 
 The `./drake` script takes whatever command you give it and runs that with rake.
+
+Examples:
++ `./drake --tasks # lists all rake tasks`
++ `./drake spec # run specs`
