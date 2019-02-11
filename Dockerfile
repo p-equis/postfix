@@ -9,6 +9,5 @@ RUN gem install bundler && bundle install --jobs 20 --retry 5
 RUN git config --global user.email "you@example.com" \
   && git config --global user.name "Your Name"
 
-ENTRYPOINT ["bundle", "exec"]
+ENTRYPOINT ["bundle", "exec", "rake"]
 
-CMD ["rake"]
